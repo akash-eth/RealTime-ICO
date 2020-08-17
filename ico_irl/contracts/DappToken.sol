@@ -1,4 +1,5 @@
-pragma solidity 0.4.24;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity >=0.5.16 <0.6.9;
 
 import "openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";

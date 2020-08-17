@@ -1,3 +1,2 @@
-# ERC-20-Tokens
-Developed ERC-20 Tokens
-Using Solidity, Truffle and Ganache.
+### =================== RealTime ICO's =================== ###
+Building an real world crowdsale that can be used to raise funds in a real world ICO.

@@ -2,8 +2,9 @@
 pragma solidity >=0.5.16;
 
 import "../node_modules/openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol";
+import "../node_modules/openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol";
 
-contract DappTokenCrowdsale is Crowdsale {
+contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale {
 
   constructor(
     uint256 _rate,
@@ -15,4 +16,5 @@ contract DappTokenCrowdsale is Crowdsale {
   {
 
   }
+
 }

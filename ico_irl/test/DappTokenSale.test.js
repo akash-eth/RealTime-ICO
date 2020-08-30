@@ -1,4 +1,4 @@
-import ether from './helpers/ether';
+import ether from '../helper/ether';
 const BigNumber = web3.BigNumber;
 
 require('chai')

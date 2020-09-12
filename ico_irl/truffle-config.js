@@ -34,11 +34,7 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
-  development: {
-    host: 'localhost',
-    port: 8545,
-    network_id: '*',
-  },
+  
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -77,6 +73,22 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    development: {
+      host: 'localhost',
+      port: 8545,
+      network_id: '*',
+    },
+    ganache: {
+      host: 'localhost',
+      port: 8545,
+      network_id: '*',
+    },
+    solc: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
   },
 
   // Set default mocha options here, use special reporters etc.

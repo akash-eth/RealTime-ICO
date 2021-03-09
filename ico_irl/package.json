@@ -32,5 +32,8 @@
     "solidity-coverage": "^0.7.11",
     "solidity-docgen": "^0.5.3",
     "web3": "^1.3.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.5.0"
   }
 }

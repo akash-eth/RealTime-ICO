@@ -6,7 +6,7 @@ const BigNumber = web3.BigNumber;
 const DappToken = artifacts.require('DappToken');
 require('chai')
     .use(require('chai-bignumber')(BigNumber))
-    .should()
+    .should()   // helps in adding: name.should.equal(name)
 
 contract(DappToken, accounts => {
 
@@ -21,7 +21,7 @@ contract(DappToken, accounts => {
     describe("token artifacts", function() {
         it("has correct name", async function() {
             const name = await this.token.name();
-            // assert.equal(name, _name);   // instead of using this we can use CHAI libraray:
+            // assert.equal(name, _name);   // instead of using this we can use CHAI library:
             name.should.equal(_name);
         })
     })

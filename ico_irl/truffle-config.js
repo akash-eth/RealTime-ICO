@@ -6,7 +6,7 @@
  *
  * More information about configuration can be found at:
  *
- * truffleframework.com/docs/advanced/configuration
+ * trufflesuite.com/docs/advanced/configuration
  *
  * To deploy via Infura you'll need a wallet provider (like @truffle/hdwallet-provider)
  * to sign your transactions before they're sent to a remote public node. Infura accounts
@@ -34,7 +34,6 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
-  
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -55,7 +54,7 @@ module.exports = {
     // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
     // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
     // from: <address>,        // Account to send txs from (default: accounts[0])
-    // websockets: true        // Enable EventEmitter interface for web3 (default: false)
+    // websocket: true        // Enable EventEmitter interface for web3 (default: false)
     // },
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
@@ -73,22 +72,6 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
-    development: {
-      host: 'localhost',
-      port: 8545,
-      network_id: '*',
-    },
-    ganache: {
-      host: 'localhost',
-      port: 8545,
-      network_id: '*',
-    },
-    solc: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
-    }
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -108,6 +91,16 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    },
+    }
   },
+
+  // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
+  //
+  // Note: if you migrated your contracts prior to enabling this field in your Truffle project and want
+  // those previously migrated contracts available in the .db directory, you will need to run the following:
+  // $ truffle migrate --reset --compile-all
+
+  db: {
+    enabled: false
+  }
 };

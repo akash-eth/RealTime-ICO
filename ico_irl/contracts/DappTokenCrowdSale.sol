@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/crowdsale/Crowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/emission/MintedCrowdsale.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol";
+import "@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
 
 contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale {
 
@@ -17,14 +18,15 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale {
     constructor (
         uint _rate, 
         address payable _wallet,
-        IERC20 _token, uint256 _cap) 
+        IERC20 _token,
+        uint256 _cap,
+        uint256 _openingTime,   //this will unix time in form of sec!!
+        uint256 _closingTime    
+        ) 
         
-        Crowdsale (
-            _rate, 
-            _wallet, 
-            _token)
-            CappedCrowdsale(_cap) 
-            
+        Crowdsale (_rate, _wallet, _token)
+        CappedCrowdsale(_cap)
+        TimedCrowdsale(_openingTime, _closingTime)  
             public {
 
     }

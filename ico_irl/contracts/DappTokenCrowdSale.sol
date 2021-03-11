@@ -21,7 +21,7 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
     enum CrowdsaleStage {PreICO, ICO}
 
     // setting default crowdsale stage:
-    CrowdsaleStage public stage = CrowdsaleStage.PreICO;
+    CrowdsaleStage public _stage = CrowdsaleStage.PreICO;
 
     constructor (
         uint _rate, 
@@ -76,6 +76,20 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
         } else if (_stage == CrowdsaleStage.ICO) {
             super._forwardFunds();
         }
+    }
+
+    function finalization() internal {
+        if(goalReached()) {
+            // finish/stop minitng of the token
+            MintableToken _mintableToken = MintableToken(_token);
+            _mintableToken.finishMinting();
+            
+            // unpause the token
+            pausableToken(_token);
+        }
+
+        // if all fails, then we call the super function !!
+        super._finalization();
     }
 
     function _preValidatePurchase (

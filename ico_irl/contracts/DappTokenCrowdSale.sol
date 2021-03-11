@@ -5,6 +5,7 @@ pragma solidity >=0.5.0 < 0.8.0;
 import "@openzeppelin/contracts/crowdsale/Crowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/emission/MintedCrowdsale.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/TokenTimelock.sol";
 import "@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
 import "@openzeppelin/contracts/crowdsale/validation/WhitelistCrowdsale.sol";
@@ -18,10 +19,21 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
     mapping (address => uint256) contributions;
 
     // token distribution percentage:
-    uint256 tokenSalePercentage = 70;
-    uint256 founderPercentage = 10;
-    uint256 foundationPercentage = 10;
-    uint256 partnerPercentage = 10;
+    uint256 public tokenSalePercentage = 70;
+    uint256 public foundersPercentage = 10;
+    uint256 public foundationPercentage = 10;
+    uint256 public partnerPercentage = 10;
+
+    // token reserve funds:
+    address _foundersFund;
+    address _foundationFund;
+    address _partnersFund;
+
+    // token time lock:
+    uint256 public _releaseTime;
+    address public _foundersTimelock;
+    address public _foundationTimelock;
+    address public _partnersTimelock;
 
     // setting up crowdsale stage:
     enum CrowdsaleStage {PreICO, ICO}
@@ -36,15 +48,21 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
         uint256 _cap,
         uint256 _openingTime,   //this will unix time in form of sec!!
         uint256 _closingTime,
-        uint256 _goal       // setting a goal to be met during fundraising. If not, refund all the fund back to investors !!    
+        uint256 _goal,       // setting a goal to be met during fundraising. If not, refund all the fund back to investors !!    
+        uint256 _releaseTime    // param used in tokenTimelock
+
         ) 
         
         Crowdsale (_rate, _wallet, _token)
         CappedCrowdsale(_cap)
         TimedCrowdsale(_openingTime, _closingTime) 
-        RefundableCrowdsale(_goal) 
+        RefundableCrowdsale(_goal)
+        // TokenTimelock(_releaseTime) 
         public {
             require(_goal <= _cap);
+            foundersFund = _foundersFund;
+            foundationFund = _foundationFund;
+            partnersFund = _partnersFund;
     }
 
     function getUserContribution(
@@ -88,7 +106,22 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
         if(goalReached()) {
             // finish/stop minitng of the token
             MintableToken _mintableToken = MintableToken(_token);
+            
+            // distribut tokens to the assigned dignetories:
+            uint256 _alreadyMinted = _mintableToken.totalSupply();
+            uint256 _finalTotalSupply = _alreadyMinted.div(tokenSalePercentage).mul(100);
+            
+            _foundersTimelock = new TokenTimelock(_token, foundersFund, _releaseTime);
+            _foudationsTimelock = new TokenTimelock(_token, foundationsFund, _releaseTime);
+            _partnersTimelock = new TokenTimelock(_token, partnersFund, _releaseTime);
+            
+            _mintableToken.mint(_foundersTimelock, _finalTotalSupply.div(foundersPercentage));
+            _mintableToken.mint(_foudationsTimelock, _finalTotalSupply.div(foundationPercentage));
+            _mintableToken.mint(_partnersTimelock, _finalTotalSupply.div(partnersPercentage));
+
             _mintableToken.finishMinting();
+            _mintableToken.mint();
+
             
             // unpause the token
             // pausableToken(_token).unpause(); // thi way not allow to hold the tokens any more,so to avoid it:

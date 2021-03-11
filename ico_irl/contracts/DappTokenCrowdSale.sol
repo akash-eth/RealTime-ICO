@@ -17,6 +17,12 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
     uint256 investorMaxCap = 50000000000000000000;
     mapping (address => uint256) contributions;
 
+    // token distribution percentage:
+    uint256 tokenSalePercentage = 70;
+    uint256 founderPercentage = 10;
+    uint256 foundationPercentage = 10;
+    uint256 partnerPercentage = 10;
+
     // setting up crowdsale stage:
     enum CrowdsaleStage {PreICO, ICO}
 
@@ -85,7 +91,10 @@ contract DappTokenCrowdsale is Crowdsale, MintedCrowdsale, CappedCrowdsale, Time
             _mintableToken.finishMinting();
             
             // unpause the token
-            pausableToken(_token);
+            // pausableToken(_token).unpause(); // thi way not allow to hold the tokens any more,so to avoid it:
+            PausableToken _pausableToken = PausableToken(_token);
+            _pausableToken.unpause();
+            _pausableToken.transferOwnerShip(_wallet);
         }
 
         // if all fails, then we call the super function !!
